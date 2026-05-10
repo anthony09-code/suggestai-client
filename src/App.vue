@@ -1,11 +1,10 @@
-<script setup lang="ts"></script>
+<script lang="ts" setup>
+import { useCurrentUser } from "@/composables/use_auth.ts";
+
+useCurrentUser();
+</script>
 
 <template>
-  <h1 class="text-amber-500">You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <BaseToast />
+  <RouterView />
 </template>
-
-<style scoped></style>

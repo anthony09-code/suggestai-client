@@ -1,0 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-background: #ffffff;
+  --color-background-neutral: #f3f4f6;
+  --color-text: #000000;
+  --color-text-white: #ffffff;
+  --color-text-muted: rgb(89, 89, 89);
+  --color-primary: #14b8a6;
+  --color-primary-strong: #0d9488;
+  --color-danger: #ef4444;
+  --color-danger-strong: #dc2626;
+  --color-warning: #f59e0b;
+  --color-warning-strong: #f59e0b;
+  --color-border: #e5e7eb;
+  --color-border-neutral: #d1d5db;
+}
+
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--color-background-neutral);
+  color: var(--color-text);
+  min-height: 100vh;
+  line-height: normal;
+}
+
+.cf-turnstile,
+.cf-turnstile iframe {
+  width: 100% !important;
+}
