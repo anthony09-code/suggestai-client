@@ -1,4 +1,14 @@
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
+
+const isLoading = ref(true);
+
+onMounted(() => {
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 1500);
+});
+
 const wordCloudData = [
   { text: "Facility issues", weight: 10 },
   { text: "Staff concerns", weight: 8 },
@@ -26,7 +36,7 @@ const wordCloudData = [
 
 <template>
   <main class="flex flex-col gap-2">
-    <div class="mb-10">
+    <div class="mb-6">
       <h2 class="text-xl font-medium">Dashboard</h2>
       <p class="text-base text-text-muted">
         Overview of student feedback across offices, highlighting common concerns, trends, and
@@ -34,42 +44,32 @@ const wordCloudData = [
       </p>
     </div>
 
-    <div class="flex flex-row gap-2">
-      <BaseCard class="w-full">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-medium text-text-muted">Total Feedbacks</span>
-          <span class="text-base font-medium text-text">1000</span>
-        </div>
-        <span class="text-xs text-primary">+12% this week</span>
-      </BaseCard>
-
-      <BaseCard class="w-full">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-medium text-text-muted">Topics found</span>
-          <span class="text-base font-medium text-text">36</span>
-        </div>
-        <span class="text-xs text-text-muted">Across all offices</span>
-      </BaseCard>
-
-      <BaseCard class="w-full">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-medium text-text-muted">Offices</span>
-          <span class="text-base font-medium text-text">8</span>
-        </div>
-        <span class="text-xs text-text-muted">All Active</span>
-      </BaseCard>
-
-      <BaseCard class="w-full">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-medium text-text-muted">Sessions run</span>
-          <span class="text-base font-medium text-text">18</span>
-        </div>
-        <span class="text-xs text-text-muted">This month</span>
-      </BaseCard>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+      <BaseStatCard
+        label="Total Feedbacks"
+        :value="1000"
+        subtitle="+12% this week"
+        highlight="true"
+        :loading="isLoading"
+      />
+      <BaseStatCard
+        label="Topics found"
+        :value="36"
+        subtitle="Across all offices"
+        :loading="isLoading"
+      />
+      <BaseStatCard label="Offices" :value="8" subtitle="All Active" :loading="isLoading" />
+      <BaseStatCard label="Sessions run" :value="18" subtitle="This month" :loading="isLoading" />
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
-      <BaseChartCard class="lg:col-span-2">
+      <BaseChartCard
+        class="lg:col-span-2"
+        title="Feedback Submissions"
+        subtitle="Monthly breakdown"
+        :loading="isLoading"
+        height="280px"
+      >
         <BaseBarChart
           :labels="[
             'Jan',
@@ -91,50 +91,102 @@ const wordCloudData = [
               data: [120, 200, 150, 300, 250, 100, 100, 100, 200, 250, 300, 400],
             },
           ]"
-          title="Feedback Submissions"
-          subtitle="Monthly breakdown"
           height="280px"
         />
       </BaseChartCard>
-      <BaseChartCard>
+
+      <BaseChartCard
+        title="Feedback Status"
+        subtitle="All feedbacks"
+        :loading="isLoading"
+        height="280px"
+      >
         <BaseDonutChart
-          :labels="['English', 'Tagalog', 'Taglish', 'Other']"
-          :datasets="[{ data: [60, 25, 15, 10] }]"
-          title="Language Distribution"
-          subtitle="All feedbacks"
+          :labels="['Processed', 'Pending']"
+          :datasets="[{ data: [60, 25] }]"
           height="280px"
         />
       </BaseChartCard>
     </div>
 
+    <BaseChartCard
+      title="Feedbacks per Office"
+      subtitle="Comparison across offices"
+      :loading="isLoading"
+    >
+      <BaseBarChart
+        :labels="['SASO', 'Registrar', 'Library', 'Finance', 'IT']"
+        :datasets="[{ label: 'Feedbacks', data: [120, 90, 60, 150, 80] }]"
+        horizontal
+        height="280px"
+      />
+    </BaseChartCard>
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
-      <BaseChartCard>
+      <BaseChartCard
+        title="Anonymous vs Identified"
+        subtitle="All time ratio"
+        :loading="isLoading"
+        height="280px"
+      >
         <BaseDonutChart
           :labels="['Anonymous', 'Identified']"
           :datasets="[{ data: [60, 25] }]"
-          title="Anonymous vs Identified"
-          subtitle="All time ratio"
           height="280px"
         />
       </BaseChartCard>
-      <BaseChartCard class="lg:col-span-2">
+
+      <BaseChartCard
+        class="lg:col-span-2"
+        title="Topics by Office"
+        subtitle="Latest analysis session"
+        :loading="isLoading"
+        height="280px"
+      >
         <BaseBarChart
           :labels="['Saso Office', 'Feb', 'Mar', 'Apr', 'May']"
           :datasets="[{ label: 'Topics by Office', data: [1, 5, 10, 15, 20] }]"
-          title="Topics by Office"
-          subtitle="Latest analysis session"
-          height="280px"
           horizontal
+          height="280px"
         />
       </BaseChartCard>
     </div>
 
-    <BaseChartCard>
-      <BaseWordCloud
-        title="Top topics across all offices"
-        subtitle="Most common student concerns"
-        :words="wordCloudData"
-      />
+    <BaseChartCard
+      title="Recent Analysis Sessions"
+      subtitle="Latest processed feedback analysis"
+      :loading="isLoading"
+    >
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-text-muted border-b border-border">
+              <th class="py-2">Office</th>
+              <th class="py-2">Feedbacks</th>
+              <th class="py-2">Status</th>
+              <th class="py-2">Date</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr class="border-b border-border" v-for="i in 4" :key="i">
+              <td class="py-2">Office {{ i }}</td>
+              <td class="py-2">{{ i * 40 }}</td>
+              <td class="py-2 text-primary">Completed</td>
+              <td class="py-2 text-text-muted">2 hours ago</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </BaseChartCard>
+
+    <BaseChartCard
+      title="Top topics across all offices"
+      subtitle="Most common student concerns"
+      :loading="isLoading"
+      height="320px"
+    >
+      <BaseWordCloud :words="wordCloudData" />
     </BaseChartCard>
   </main>
 </template>

@@ -4,21 +4,23 @@ import {
   IconLayoutDashboardFilled,
   IconReportAnalyticsFilled,
   IconBox,
-  IconUser,
 } from "@tabler/icons-vue";
 import { useRoute } from "vue-router";
 import { ref, computed } from "vue";
-import { useAuthStore } from "@/stores/auth_store";
-import { useLogout } from "@/composables/use_auth";
-import { useOffices } from "@/composables/use_office";
+import { useUserInitials } from "@/composables/use.user.initials";
+import { useLogout } from "@/features/auth/composables/use.logout";
+import { useOffices } from "@/features/office/composables/use.office";
 import type { MenuItem } from "@/components/BaseMenu";
 
 const route = useRoute();
-const auth = useAuthStore();
+const { initials } = useUserInitials();
 const { logoutMutate } = useLogout();
 const { data: offices } = useOffices();
 
 const isOfficeLayout = computed(() => route.path.startsWith("/offices/"));
+
+const loadingOffices = computed(() => !offices.value);
+
 const avatarMenu = ref<InstanceType<typeof BaseMenu> | null>(null);
 
 const menuItems = computed<MenuItem[]>(() => [
@@ -53,7 +55,12 @@ const menuItems = computed<MenuItem[]>(() => [
         </router-link>
 
         <div class="flex flex-col items-center gap-2 py-2">
+          <div v-if="loadingOffices" v-for="n in 4" :key="'sk-office-' + n" class="p-2">
+            <BaseSkeleton width="22px" height="22px" shape="circle" />
+          </div>
+
           <router-link
+            v-else
             v-for="office in offices"
             :key="office.id"
             v-tooltip.right="office.office_name"
@@ -78,8 +85,7 @@ const menuItems = computed<MenuItem[]>(() => [
       <div class="mt-auto">
         <BaseMenu ref="avatarMenu" :items="menuItems" />
         <BaseAvatar
-          :label="auth.initials"
-          :image="auth.user?.avatar"
+          :label="initials"
           size="md"
           bg="bg-primary"
           class="cursor-pointer"

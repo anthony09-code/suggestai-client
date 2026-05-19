@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useCurrentUser } from "@/composables/use_auth.ts";
+import { useCurrentUser } from "@/features/auth/composables/use.current.user";
 
 useCurrentUser();
 </script>

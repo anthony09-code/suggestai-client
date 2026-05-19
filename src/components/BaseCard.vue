@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Card from "primevue/card";
-import { IconLoader2 } from "@tabler/icons-vue";
 
 defineProps<{
   title?: string;
@@ -23,7 +22,7 @@ defineProps<{
         class: 'text-sm font-medium text-text',
       },
       subtitle: {
-        class: 'text-sm text-text-muted mt-1',
+        class: 'text-sm text-text-muted mb-6',
       },
       content: {
         class: 'text-sm text-text',
@@ -39,10 +38,7 @@ defineProps<{
     </template>
 
     <template #content>
-      <div v-if="loading" class="flex items-center justify-center py-4">
-        <IconLoader2 class="animate-spin text-border-neutral" :size="20" />
-      </div>
-      <slot v-else />
+      <slot />
     </template>
   </Card>
 </template>

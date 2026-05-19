@@ -1,14 +1,10 @@
 <script lang="ts" setup>
-import { useOffices } from "@/composables/use_office";
-import { ref, watch } from "vue";
+import { computed } from "vue";
+import { useOffices } from "@/features/office/composables/use.office";
 
-const { data: offices, isLoading, isError } = useOffices();
+const { data: offices, isLoading, isFetching, isError } = useOffices();
 
-const cachedCount = ref(0);
-
-watch(offices, (val) => {
-  if (val?.length) cachedCount.value = val.length;
-});
+const officeCount = computed(() => offices.value?.length || 6);
 </script>
 
 <template>
@@ -18,6 +14,7 @@ watch(offices, (val) => {
       <BaseButton label="Create Box" variant="primary" size="sm" />
     </div>
     <span class="text-base text-text-muted">Suggestion Box:</span>
+
     <BaseMessage
       v-if="isError || (!isLoading && !offices?.length)"
       :severity="isError ? 'error' : 'warn'"
@@ -31,8 +28,18 @@ watch(offices, (val) => {
 
     <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
       <template v-if="isLoading">
-        <BaseCard v-for="n in cachedCount || 8" :key="n" :loading="true" />
+        <BaseCard v-for="n in officeCount" :key="n">
+          <BaseSkeleton height="16px" width="55%" />
+          <div class="mt-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <BaseSkeleton height="8px" width="8px" shape="circle" />
+              <BaseSkeleton height="12px" width="48px" />
+            </div>
+            <BaseSkeleton height="12px" width="80px" />
+          </div>
+        </BaseCard>
       </template>
+
       <template v-else>
         <BaseCard v-for="office in offices" :key="office.id" class="cursor-pointer">
           <p class="text-base font-medium text-text">{{ office.office_name }}</p>

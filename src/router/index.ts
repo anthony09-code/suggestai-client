@@ -1,8 +1,10 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+import { useAuthStore } from "@/features/auth/stores/auth.store";
 
 import LoginView from "../views/auth/LoginView.vue";
 import PageNotFoundView from "../views/errors/PageNotFoundView.vue";
 import ForbiddenView from "../views/errors/ForbiddenView.vue";
+import UnauthorizedView from "../views/errors/UnauthorizedView.vue";
 
 import BaseLayout from "../layouts/BaseLayout.vue";
 import SuggestionBoxLayout from "../layouts/SuggestionBoxLayout.vue";
@@ -15,7 +17,6 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginView,
-
       meta: {
         requiresAuth: false,
         title: "Login",
@@ -25,7 +26,6 @@ const router = createRouter({
     {
       path: "/",
       component: BaseLayout,
-
       meta: {
         requiresAuth: true,
       },
@@ -44,28 +44,25 @@ const router = createRouter({
         },
 
         {
-          path: "offices/:slug",
+          path: "offices/:link",
           component: SuggestionBoxLayout,
-
+          redirect: (to) => `/offices/${to.params.link}/overview`,
           children: [
             {
-              path: "",
+              path: "overview",
               name: "office-overview",
               component: () => import("../views/offices/OfficeOverviewView.vue"),
             },
-
             {
               path: "suggestions",
               name: "office-suggestions",
               component: () => import("../views/offices/OfficeSuggestionListView.vue"),
             },
-
             {
               path: "summary",
               name: "office-summary",
               component: () => import("../views/offices/OfficeSuggestionSummaryView.vue"),
             },
-
             {
               path: "settings",
               name: "office-settings",
@@ -83,11 +80,11 @@ const router = createRouter({
     },
 
     {
-      path: "/:pathMatch(.*)*",
-      name: "not-found",
-      component: PageNotFoundView,
+      path: "/unauthorized",
+      name: "unauthorized",
+      component: UnauthorizedView,
       meta: {
-        title: "404 Not Found",
+        title: "Unauthorized",
       },
     },
 
@@ -95,28 +92,37 @@ const router = createRouter({
       path: "/forbidden",
       name: "forbidden",
       component: ForbiddenView,
-
       meta: {
-        title: "403 Forbidden",
+        title: "Forbidden",
+      },
+    },
+
+    {
+      path: "/:pathMatch(.*)*",
+      name: "not-found",
+      component: PageNotFoundView,
+      meta: {
+        title: "404 Not Found",
       },
     },
   ],
 });
 
-router.beforeEach((to, _from) => {
-  const isAuthenticated = !!localStorage.getItem("token");
+router.beforeEach((to) => {
+  const auth = useAuthStore();
+  const isAuthenticated = !!auth.token;
 
   const appName = "TLC-SUGGEST";
-
   const pageTitle = to.meta.title as string;
-
   document.title = pageTitle ? `${pageTitle} | ${appName}` : appName;
 
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const requiresAuth = to.matched.some((r) => r.meta.requiresAuth);
 
   if (requiresAuth && !isAuthenticated) {
     return { name: "login" };
-  } else if (!requiresAuth && isAuthenticated && to.name === "login") {
+  }
+
+  if (!requiresAuth && isAuthenticated && to.name === "login") {
     return { name: "dashboard" };
   }
 });
