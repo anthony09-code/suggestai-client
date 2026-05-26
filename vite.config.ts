@@ -23,7 +23,7 @@ export default defineConfig({
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' https://fonts.gstatic.com",
         "connect-src 'self' ws: wss: http://127.0.0.1:8000 https://challenges.cloudflare.com",
-        "img-src 'self' data: https://challenges.cloudflare.com",
+        "img-src 'self' data: https://challenges.cloudflare.com https://lh3.googleusercontent.com",
         "worker-src blob: https://challenges.cloudflare.com",
       ].join("; "),
     },

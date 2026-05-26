@@ -1,5 +1,5 @@
-import api from ".";
-import type { Office, CreateOfficePayload, UpdateOfficePayload } from "../types/office_types";
+import api from "@/api";
+import type { Office, CreateOfficePayload, UpdateOfficePayload } from "../types/office.types";
 
 interface OfficeResponse {
   success: boolean;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { IconBrandGoogleFilled } from "@tabler/icons-vue";
 import { onMounted, onUnmounted, ref } from "vue";
-import { useLogin } from "../../composables/use_auth";
+import { useLogin } from "../../features/auth/composables/use.login";
 
 const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 const turnstileRef = ref<HTMLElement | null>(null);
@@ -129,7 +129,6 @@ function handleSubmit() {
             type="submit"
             variant="primary"
             :label="isLockedOut ? `Try again in ${lockoutSeconds}s` : 'Log in'"
-            size="small"
             class="w-full"
             :loading="isPending"
             :disabled="isPending || !turnstileToken || isLockedOut"

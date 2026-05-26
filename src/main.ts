@@ -20,10 +20,17 @@ import BaseMessage from "./components/BaseMessage.vue";
 import BaseToast from "./components/BaseToast.vue";
 import BaseDropdown from "./components/BaseDropdown.vue";
 import BaseAvatar from "./components/BaseAvatar.vue";
+import BaseSkeleton from "./components/BaseSkeleton.vue";
 import BaseMenu from "./components/BaseMenu.vue";
+import BaseBreadcrumb from "./components/BaseBreadcrumb.vue";
+import BaseClearFiltersButton from "./components/BaseClearFiltersButton.vue";
+import BaseTable from "./components/table/BaseTable.vue";
+import BaseDatePicker from "./components/BaseDatePicker.vue";
 import BaseChartCard from "./components/charts/BaseChartCard.vue";
+import BaseStatCard from "./components/charts/BaseStatCard.vue";
 import BaseBarChart from "./components/charts/BaseBarGraph.vue";
 import BaseDonutChart from "./components/charts/BaseDonutGraph.vue";
+import BaseLineChart from "./components/charts/BaseLineChart.vue";
 import BaseWordCloud from "./components/charts/BaseWordCloud.vue";
 import ErrorView from "./components/ErrorView.vue";
 
@@ -48,10 +55,17 @@ app
   .component("BaseToast", BaseToast)
   .component("BaseDropdown", BaseDropdown)
   .component("BaseAvatar", BaseAvatar)
+  .component("BaseSkeleton", BaseSkeleton)
+  .component("BaseBreadcrumb", BaseBreadcrumb)
+  .component("BaseClearFiltersButton", BaseClearFiltersButton)
   .component("BaseMenu", BaseMenu)
+  .component("BaseTable", BaseTable)
+  .component("BaseDatePicker", BaseDatePicker)
   .component("BaseChartCard", BaseChartCard)
+  .component("BaseStatCard", BaseStatCard)
   .component("BaseBarChart", BaseBarChart)
   .component("BaseDonutChart", BaseDonutChart)
+  .component("BaseLineChart", BaseLineChart)
   .component("BaseWordCloud", BaseWordCloud)
   .component("ErrorView", ErrorView)
   .component("Chart", Chart);

@@ -36,3 +36,35 @@ body {
 .cf-turnstile iframe {
   width: 100% !important;
 }
+:deep(.p-breadcrumb-list) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+:deep(.p-menuitem-separator) {
+  display: flex;
+  align-items: center;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.sk {
+  display: block;
+  border-radius: 6px;
+  background-color: var(--color-border);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.sk[data-shape="circle"] {
+  border-radius: 50%;
+}

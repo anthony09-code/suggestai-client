@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import type { Office } from "@/types/office_types";
+import type { Office } from "../types/office.types";
 
 export const useOfficeStore = defineStore("office", () => {
   const offices = ref<Office[]>([]);

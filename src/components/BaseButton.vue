@@ -7,7 +7,7 @@ defineProps<{
   label?: string;
   type?: "button" | "submit" | "reset";
   variant?: "primary" | "danger" | "neutral";
-  size?: "small" | "large";
+  // size?: "small" | "large";
   disabled?: boolean;
   loading?: boolean;
 }>();
