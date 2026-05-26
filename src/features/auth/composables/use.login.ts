@@ -4,7 +4,11 @@ import { ref } from "vue";
 
 import { login } from "../api/auth.api";
 import { useAuthStore } from "../stores/auth.store";
+
 import type { LoginPayload } from "../types/auth.types";
+import type { LoginErrorResponse } from "../types/auth.types";
+import type { AxiosError } from "axios";
+
 import { parseLoginError } from "../utils/auth.errors";
 import { useLockout } from "@/composables/use.lockout";
 
@@ -22,8 +26,10 @@ export function useLogin() {
       router.push("/dashboard");
     },
     onError: (err) => {
-      const { message, lockoutSeconds: wait } = parseLoginError(err);
-      errorMessage.value = message;
+      const { message, lockoutSeconds: wait } = parseLoginError(
+        err as AxiosError<LoginErrorResponse>,
+      );
+      if (message) errorMessage.value = message;
       if (wait) startLockout(wait);
     },
   });

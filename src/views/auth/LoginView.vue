@@ -129,7 +129,6 @@ function handleSubmit() {
             type="submit"
             variant="primary"
             :label="isLockedOut ? `Try again in ${lockoutSeconds}s` : 'Log in'"
-            size="small"
             class="w-full"
             :loading="isPending"
             :disabled="isPending || !turnstileToken || isLockedOut"

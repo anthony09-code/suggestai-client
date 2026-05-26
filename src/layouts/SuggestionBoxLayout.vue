@@ -8,24 +8,22 @@ const route = useRoute();
 const router = useRouter();
 const { data: offices } = useOffices();
 
-const link = computed(() => route.params.link as string);
+const link = computed(() => route.params.accessLink as string);
 
-const currentOffice = computed(() =>
-  offices.value?.find((o) => o.id === link.value || o.access_link === link.value),
-);
+const currentOffice = computed(() => offices.value?.find((o) => o.access_link === link.value));
 
 const tabs = computed(() => {
   const base = `/offices/${link.value}`;
   return [
     { label: "Overview", to: `${base}/overview` },
-    { label: "Suggestions", to: `${base}/suggestions` },
+    { label: "Feedbacks", to: `${base}/feedbacks` },
     { label: "Summary", to: `${base}/summary` },
   ];
 });
 
 const selectedOffice = computed({
   get() {
-    return link.value ?? null;
+    return currentOffice.value?.office_name ?? link.value;
   },
   set(val: string | null) {
     if (val) router.push(`/offices/${val}/overview`);
@@ -62,6 +60,8 @@ const breadcrumbItems = computed(() => {
           optionValue="value"
           :icon="IconBox"
           placeholder="Select office"
+          size="small"
+          class="w-full"
         />
       </div>
       <nav class="flex flex-col px-4">
@@ -92,7 +92,7 @@ const breadcrumbItems = computed(() => {
       </nav>
     </aside>
     <div class="flex-1 bg-background border border-border rounded-2xl overflow-auto">
-      <div class="border-b border-border px-12 py-3 flex items-center justify-between">
+      <div class="border-b border-border px-12 py-4 flex items-center justify-between">
         <div class="flex items-center gap-2">
           <IconBox class="text-text-muted shrink-0" :size="18" />
           <BaseBreadcrumb :items="breadcrumbItems" />

@@ -23,10 +23,10 @@ const emit = defineEmits<{
         class: [
           'w-full flex items-start gap-4 p-4 rounded-xl',
 
-          severity === 'success' && 'bg-primary/30 text-primary',
+          severity === 'success' && 'bg-primary/20 text-primary',
           severity === 'info' && 'bg-blue-50 text-blue-700',
           severity === 'warn' && 'bg-yellow-50 text-yellow-700',
-          severity === 'error' && 'bg-danger/30 text-danger',
+          severity === 'error' && 'bg-danger/20 text-danger',
           severity === 'secondary' && 'bg-background-neutral text-text-muted',
 
           !severity && 'bg-background text-text',

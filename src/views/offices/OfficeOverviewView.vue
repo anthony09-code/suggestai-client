@@ -8,30 +8,6 @@ onMounted(() => {
     isLoading.value = false;
   }, 1500);
 });
-
-const wordCloudData = [
-  { text: "Facility issues", weight: 10 },
-  { text: "Staff concerns", weight: 8 },
-  { text: "Process delays", weight: 6 },
-  { text: "Wifi & internet", weight: 7 },
-  { text: "Food & canteen", weight: 5 },
-  { text: "Library resources", weight: 4 },
-  { text: "Classroom comfort", weight: 9 },
-  { text: "Tuition fees", weight: 7 },
-  { text: "Scholarship concerns", weight: 6 },
-  { text: "Enrollment process", weight: 8 },
-  { text: "Document processing", weight: 7 },
-  { text: "Guidance counseling", weight: 4 },
-  { text: "Health services", weight: 5 },
-  { text: "Restroom cleanliness", weight: 6 },
-  { text: "Parking issues", weight: 3 },
-  { text: "Laboratory equipment", weight: 5 },
-  { text: "Teaching quality", weight: 8 },
-  { text: "Grade concerns", weight: 7 },
-  { text: "Extracurricular", weight: 3 },
-  { text: "Campus safety", weight: 6 },
-  { text: "Noise level", weight: 4 },
-];
 </script>
 
 <template>

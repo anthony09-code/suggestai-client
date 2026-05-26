@@ -46,7 +46,7 @@ function prevPage() {
   <div class="bg-background overflow-hidden">
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
-        <thead class="bg-background border-b-2 border-border">
+        <thead class="bg-background">
           <tr>
             <th
               v-for="col in columns"
@@ -59,44 +59,40 @@ function prevPage() {
           </tr>
         </thead>
 
-        <tbody>
-          <tr
-            v-for="(row, i) in paginatedData"
-            :key="rowKey ? (row as any)[rowKey] : i"
-            class="border-border hover:bg-text-muted/5 transition"
-          >
-            <td v-for="col in columns" :key="col.label" class="px-4 py-3 text-text">
-              <slot v-if="col.slot" :name="col.slot" :row="row" />
-
-              <span v-else-if="col.render">
-                {{ col.render(row) }}
-              </span>
-
-              <span v-else>
-                {{ (row as any)[col.key as string] }}
-              </span>
-            </td>
-          </tr>
-
-          <tr v-if="!loading && paginatedData.length === 0">
-            <td
-              :colspan="columns.length"
-              class="text-center py-10 text-text-muted border-y-2 border-border"
+        <tbody class="border-y border-border">
+          <template v-if="loading">
+            <tr v-for="n in pageSize" :key="`skeleton-${n}`" class="border-b border-border/50">
+              <td v-for="col in columns" :key="col.label" class="px-4 py-6">
+                <BaseSkeleton height="16px" />
+              </td>
+            </tr>
+          </template>
+          <template v-else>
+            <tr
+              v-for="(row, i) in paginatedData"
+              :key="rowKey ? (row as any)[rowKey] : i"
+              class="hover:bg-text-muted/5 transition"
             >
-              No data found
-            </td>
-          </tr>
-
-          <tr v-if="loading">
-            <td :colspan="columns.length" class="text-center py-10 text-text-muted animate-pulse">
-              Loading...
-            </td>
-          </tr>
+              <td v-for="col in columns" :key="col.label" class="px-4 py-6 text-text">
+                <slot v-if="col.slot" :name="col.slot" :row="row" />
+                <span v-else-if="col.render">{{ col.render(row) }}</span>
+                <span v-else>{{ (row as any)[col.key as string] }}</span>
+              </td>
+            </tr>
+            <tr v-if="paginatedData.length === 0">
+              <td
+                :colspan="columns.length"
+                class="text-center py-10 text-text-muted border-y-2 border-border"
+              >
+                No records found
+              </td>
+            </tr>
+          </template>
         </tbody>
       </table>
     </div>
 
-    <div v-if="pagination" class="flex items-center justify-between px-4 py-3">
+    <div v-if="pagination" class="flex items-center px-4 py-3">
       <button class="px-3 py-1 rounded bg-muted hover:bg-muted/70" @click="prevPage">Prev</button>
 
       <span class="text-sm text-text-muted"> Page {{ page }} / {{ totalPages || 1 }} </span>

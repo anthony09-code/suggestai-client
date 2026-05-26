@@ -1,7 +1,8 @@
 import type { AxiosInstance, AxiosError } from "axios";
 import router from "@/router";
 import { useAuthStore } from "@/features/auth/stores/auth.store";
-import { logError, notifyServerError } from "./logger";
+import { logError } from "./logger";
+import { notifyNetworkError, notifyServerError } from "@/lib/network";
 
 const SERVER_ERRORS = new Set([500, 502, 503, 504]);
 
@@ -23,6 +24,12 @@ export function applyResponseInterceptor(api: AxiosInstance): void {
   api.interceptors.response.use(
     (res) => res,
     async (error: AxiosError) => {
+      // server is down or no internet
+      if (!error.response || error.code === "ERR_NETWORK") {
+        notifyNetworkError();
+        return Promise.reject(error);
+      }
+
       const status = error.response?.status;
       const req = error.config;
 

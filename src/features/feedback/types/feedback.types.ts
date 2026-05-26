@@ -3,7 +3,7 @@ import type { Student } from "@/types/student.types";
 
 export type Feedback = {
   id: string;
-  raw_text: string;
+  raw_text: string | null;
   status: "pending" | "processed";
   is_anonymous: boolean;
   is_summarized: boolean;

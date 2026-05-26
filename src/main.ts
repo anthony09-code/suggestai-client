@@ -23,7 +23,9 @@ import BaseAvatar from "./components/BaseAvatar.vue";
 import BaseSkeleton from "./components/BaseSkeleton.vue";
 import BaseMenu from "./components/BaseMenu.vue";
 import BaseBreadcrumb from "./components/BaseBreadcrumb.vue";
+import BaseClearFiltersButton from "./components/BaseClearFiltersButton.vue";
 import BaseTable from "./components/table/BaseTable.vue";
+import BaseDatePicker from "./components/BaseDatePicker.vue";
 import BaseChartCard from "./components/charts/BaseChartCard.vue";
 import BaseStatCard from "./components/charts/BaseStatCard.vue";
 import BaseBarChart from "./components/charts/BaseBarGraph.vue";
@@ -55,8 +57,10 @@ app
   .component("BaseAvatar", BaseAvatar)
   .component("BaseSkeleton", BaseSkeleton)
   .component("BaseBreadcrumb", BaseBreadcrumb)
+  .component("BaseClearFiltersButton", BaseClearFiltersButton)
   .component("BaseMenu", BaseMenu)
   .component("BaseTable", BaseTable)
+  .component("BaseDatePicker", BaseDatePicker)
   .component("BaseChartCard", BaseChartCard)
   .component("BaseStatCard", BaseStatCard)
   .component("BaseBarChart", BaseBarChart)

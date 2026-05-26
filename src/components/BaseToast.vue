@@ -75,7 +75,7 @@ const props = defineProps<{ progress?: number }>();
     position="top-center"
     :pt="{
       root: {
-        class: 'fixed top-2 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-4 w-100 !top-2',
+        class: 'fixed top-2 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-4 w-110 !top-2',
       },
       message: { class: 'shadow-md overflow-hidden' },
       content: { class: 'flex items-start flex-1' },
@@ -119,7 +119,7 @@ const props = defineProps<{ progress?: number }>();
     position="top-center"
     :pt="{
       root: {
-        class: 'fixed top-2 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-4 w-100 !top-2',
+        class: 'fixed top-2 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-4 w-110 !top-2',
       },
       message: { class: 'shadow-md overflow-hidden rounded-lg' },
       content: { class: 'flex items-start flex-1' },
@@ -171,6 +171,34 @@ const props = defineProps<{ progress?: number }>();
         <div class="flex items-center justify-end gap-2 px-4 py-2.5 border-t border-gray-100">
           <BaseButton variant="neutral" size="sm" label="Close" @click="closeCallback" />
           <BaseButton> View </BaseButton>
+        </div>
+      </div>
+    </template>
+  </Toast>
+
+  <Toast
+    group="network-error"
+    position="top-center"
+    :pt="{
+      root: {
+        class: 'fixed top-2 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-4 w-110 !top-2',
+      },
+      message: { class: 'shadow-md overflow-hidden' },
+      content: { class: 'flex items-start flex-1' },
+      text: { class: 'hidden' },
+      summary: { class: 'hidden' },
+      detail: { class: 'hidden' },
+      closeButton: { class: 'hidden' },
+    }"
+  >
+    <template #message="{ message }">
+      <div
+        class="relative flex items-start gap-3 px-4 py-3 w-full border-l-4 border-l-danger bg-red-50"
+      >
+        <IconCircleX class="w-5 h-5 shrink-0 mt-0.5 text-danger" />
+        <div class="flex flex-col gap-0.5 flex-1">
+          <span class="font-medium text-sm text-danger">{{ message.summary }}</span>
+          <span class="text-xs text-text-muted leading-relaxed">{{ message.detail }}</span>
         </div>
       </div>
     </template>

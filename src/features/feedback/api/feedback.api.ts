@@ -28,3 +28,14 @@ export const getFeedback = (id: string) =>
 
 export const deleteFeedback = (id: string) =>
   api.delete<{ success: boolean; message: string }>(`/api/feedbacks/${id}`).then((r) => r.data);
+
+export const exportFeedbacks = (
+  accessLink: string,
+  format: "csv" | "excel" | "pdf",
+  params?: FeedbackParams,
+) =>
+  api.get(`/api/feedbacks/export/${accessLink}`, {
+    params: { format, ...params },
+    responseType: "blob",
+    timeout: 60000,
+  });
