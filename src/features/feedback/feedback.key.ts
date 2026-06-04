@@ -6,4 +6,5 @@ export const FEEDBACK_KEYS = {
   byOffice: (accessLink: string, params?: FeedbackParams) =>
     ["feedbacks", "office", accessLink, params] as const,
   detail: (id: string) => ["feedbacks", id] as const,
+  stats: () => ["feedbacks", "stats"] as const,
 };

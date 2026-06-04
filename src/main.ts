@@ -2,6 +2,8 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { VueQueryPlugin } from "@tanstack/vue-query";
 import PrimeVue from "primevue/config";
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+
 // import Aura from "@primeuix/themes/aura";
 
 import "./assets/css/main.css";
@@ -25,6 +27,7 @@ import BaseMenu from "./components/BaseMenu.vue";
 import BaseBreadcrumb from "./components/BaseBreadcrumb.vue";
 import BaseClearFiltersButton from "./components/BaseClearFiltersButton.vue";
 import BaseTable from "./components/table/BaseTable.vue";
+import BaseDialog from "./components/BaseDialog.vue";
 import BaseDatePicker from "./components/BaseDatePicker.vue";
 import BaseChartCard from "./components/charts/BaseChartCard.vue";
 import BaseStatCard from "./components/charts/BaseStatCard.vue";
@@ -35,9 +38,12 @@ import BaseWordCloud from "./components/charts/BaseWordCloud.vue";
 import ErrorView from "./components/ErrorView.vue";
 
 const app = createApp(App);
+const pinia = createPinia();
+
+pinia.use(piniaPluginPersistedstate);
 
 app
-  .use(createPinia())
+  .use(pinia)
   .use(router)
   .use(VueQueryPlugin)
   .use(PrimeVue, {
@@ -60,6 +66,7 @@ app
   .component("BaseClearFiltersButton", BaseClearFiltersButton)
   .component("BaseMenu", BaseMenu)
   .component("BaseTable", BaseTable)
+  .component("BaseDialog", BaseDialog)
   .component("BaseDatePicker", BaseDatePicker)
   .component("BaseChartCard", BaseChartCard)
   .component("BaseStatCard", BaseStatCard)

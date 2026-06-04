@@ -23,34 +23,25 @@ onMounted(() => {
     <div class="flex flex-row gap-2">
       <BaseStatCard
         class="w-full"
-        label="Total Feedbacks"
-        :value="1000"
+        label="Total Topics"
+        :value="43"
         subtitle="this session"
         :loading="isLoading"
       />
 
       <BaseStatCard
         class="w-full"
-        label="Topic founds"
+        label="Feedbacks analyzed"
         :value="36"
-        subtitle="from analysis"
+        subtitle="100% of submitted"
         :loading="isLoading"
       />
 
       <BaseStatCard
         class="w-full"
-        label="Processed"
-        :value="89"
-        subtitle="0 pending"
-        highlight="true"
-        :loading="isLoading"
-      />
-
-      <BaseStatCard
-        class="w-full"
-        label="Sessions run"
-        :value="10"
-        subtitle="all time"
+        label="Avg confidence"
+        :value="0.82"
+        subtitle="Across all topics"
         :loading="isLoading"
       />
     </div>
@@ -101,46 +92,18 @@ onMounted(() => {
       </BaseChartCard>
 
       <BaseChartCard
-        title="Language Distribution"
-        subtitle="All feedbacks"
+        title="Confidence breakdown"
+        subtitle="Topic assignment quality"
         :loading="isLoading"
         height="280px"
       >
         <BaseDonutChart
-          :labels="['English', 'Tagalog', 'Taglish', 'Other']"
-          :datasets="[{ data: [60, 25, 15, 10] }]"
+          :labels="['High', 'Medium', 'Low']"
+          :datasets="[{ data: [612, 213, 176] }]"
           height="280px"
         />
       </BaseChartCard>
     </div>
-
-    <BaseChartCard
-      title="Recent Analysis Sessions"
-      subtitle="Latest processed feedback analysis"
-      :loading="isLoading"
-    >
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="text-left text-text-muted border-b border-border">
-              <th class="py-2">Office</th>
-              <th class="py-2">Feedbacks</th>
-              <th class="py-2">Status</th>
-              <th class="py-2">Date</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr class="border-b border-border" v-for="i in 4" :key="i">
-              <td class="py-2">Office {{ i }}</td>
-              <td class="py-2">{{ i * 40 }}</td>
-              <td class="py-2 text-primary">Completed</td>
-              <td class="py-2 text-text-muted">2 hours ago</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </BaseChartCard>
 
     <BaseChartCard
       title="Top Feedback Sample per Topic"

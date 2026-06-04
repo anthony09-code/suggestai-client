@@ -18,3 +18,26 @@ export interface FeedbackParams {
   per_page?: number;
   status?: string;
 }
+
+export interface FeedbackStats {
+  total_feedbacks: number;
+  total_pending: number;
+  total_processed: number;
+  status_breakdown: {
+    processed: number;
+    pending: number;
+  };
+  anonymous_breakdown: {
+    anonymous: number;
+    identified: number;
+  };
+  feedback_trend: {
+    month: string;
+    count: number;
+  }[];
+  feedbacks_per_office: {
+    office_name: string;
+    feedback_count: number;
+    color: string;
+  }[];
+}

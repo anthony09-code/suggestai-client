@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/vue-query";
-import { useRouter } from "vue-router";
 import { ref } from "vue";
 
 import { login } from "../api/auth.api";
@@ -11,11 +10,15 @@ import type { AxiosError } from "axios";
 
 import { parseLoginError } from "../utils/auth.errors";
 import { useLockout } from "@/composables/use.lockout";
+import { useBaseRouter } from "@/composables/use.router";
 
 export function useLogin() {
   const auth = useAuthStore();
-  const router = useRouter();
+
+  const { push } = useBaseRouter();
+
   const errorMessage = ref("");
+
   const { isLockedOut, lockoutSeconds, start: startLockout } = useLockout();
 
   const { mutate: loginMutate, isPending } = useMutation({
@@ -23,7 +26,7 @@ export function useLogin() {
     onSuccess: (data) => {
       auth.setToken(data.token);
       auth.setUser(data.user);
-      router.push("/dashboard");
+      push("/dashboard");
     },
     onError: (err) => {
       const { message, lockoutSeconds: wait } = parseLoginError(

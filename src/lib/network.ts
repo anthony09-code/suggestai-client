@@ -7,17 +7,17 @@ export function notifyNetworkError(): void {
   networkErrorShown = true;
   getToast().add({
     severity: "error",
-    summary: "Server unavailable",
+    // summary: "Cannot reach the server. Please check your connection.",
     detail: "Cannot reach the server. Please check your connection.",
     group: "network-error",
-    closable: false,
+    closable: true,
   });
 }
 
 export function notifyServerError(status: number): void {
   getToast().add({
     severity: "error",
-    summary: "Something went wrong",
+    // summary: "An unexpected error occurred (${status}). Please try again.",
     detail: `An unexpected error occurred (${status}). Please try again.`,
     life: 6000,
   });

@@ -5,28 +5,25 @@ import {
   IconReportAnalyticsFilled,
   IconBox,
 } from "@tabler/icons-vue";
-import { useRoute, useRouter } from "vue-router";
 import { ref, computed } from "vue";
+import { useBaseRouter } from "@/composables/use.router";
 import { useUserInitials } from "@/composables/use.user.initials";
 import { useLogout } from "@/features/auth/composables/use.logout";
 import { useOffices } from "@/features/office/composables/use.office";
 import type { MenuItem } from "@/components/BaseMenu";
 
-const route = useRoute();
-const router = useRouter();
+const { path, push } = useBaseRouter();
 
 const { initials } = useUserInitials();
 const { logoutMutate } = useLogout();
 const { data: offices } = useOffices();
 
-const isOfficeLayout = computed(() => route.path.startsWith("/offices/"));
-
+const isOfficeLayout = computed(() => path.value.startsWith("/offices/"));
 const loadingOffices = computed(() => !offices.value);
-
 const avatarMenu = ref<InstanceType<typeof BaseMenu> | null>(null);
 
 const menuItems = computed<MenuItem[]>(() => [
-  { label: "Profile", command: () => router.push("/profile") },
+  { label: "Profile", command: () => push("/profile") },
   { separator: true },
   { label: "Logout", command: () => logoutMutate() },
 ]);
@@ -75,14 +72,14 @@ const menuItems = computed<MenuItem[]>(() => [
           </router-link>
         </div>
 
-        <router-link
+        <!-- <router-link
           v-tooltip.right="'Reports'"
           to="/reports"
           class="p-2 rounded-lg flex items-center justify-center text-text-muted hover:bg-text-muted/10 transition duration-150"
           active-class="bg-text-muted/10"
         >
           <IconReportAnalyticsFilled :size="22" />
-        </router-link>
+        </router-link> -->
       </nav>
 
       <div class="mt-auto">
