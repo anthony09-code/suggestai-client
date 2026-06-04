@@ -35,7 +35,7 @@ export const dateOptions = [
     label: "Year to Date",
     value: "ytd",
   },
-];
+] as const;
 
 export const anonymousOptions = [
   {
@@ -50,7 +50,7 @@ export const anonymousOptions = [
     label: "Identified",
     value: "identified",
   },
-];
+] as const;
 
 export const statusOptions = [
   {
@@ -65,7 +65,7 @@ export const statusOptions = [
     label: "Processed",
     value: "processed",
   },
-];
+] as const;
 
 export const exportOptions = [
   {
@@ -80,4 +80,4 @@ export const exportOptions = [
     label: "Pdf",
     value: "pdf",
   },
-];
+] as const;

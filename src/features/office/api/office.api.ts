@@ -29,3 +29,11 @@ export const deleteOffice = (accessLink: string) =>
   api
     .delete<{ success: boolean; message: string }>(`/api/offices/${accessLink}`)
     .then((r) => r.data);
+
+export const downloadOfficeQr = async (accessLink: string) => {
+  const response = await api.get(`/api/offices/${accessLink}/download-qr`, {
+    responseType: "blob",
+  });
+
+  return response.data;
+};

@@ -6,6 +6,7 @@ type Option = {
   label: string;
   value: string | number;
   icon?: Component;
+  color?: string;
 };
 
 type Size = "small" | "medium" | "large";
@@ -95,13 +96,22 @@ onUnmounted(() => document.removeEventListener("mousedown", onClickOutside));
     >
       <component v-if="icon" :is="icon" :size="sizeClasses.icon" class="text-text-muted shrink-0" />
 
-      <span v-if="selectedOption" class="flex-1 text-left text-text truncate capitalize">
-        {{ selectedOption[labelKey] }}
-      </span>
-
-      <span v-else class="flex-1 text-left text-text-muted truncate">
-        {{ placeholder ?? "Select..." }}
-      </span>
+      <slot name="trigger">
+        <span
+          v-if="selectedOption"
+          class="flex items-center gap-2 flex-1 text-left text-text truncate"
+        >
+          <span
+            v-if="selectedOption.color"
+            class="w-4 h-4 rounded-full shrink-0"
+            :style="{ backgroundColor: String(selectedOption.color) }"
+          />
+          {{ selectedOption[labelKey] }}
+        </span>
+        <span v-else class="flex-1 text-left text-text-muted truncate">
+          {{ placeholder ?? "Select..." }}
+        </span>
+      </slot>
 
       <IconChevronDown
         :size="sizeClasses.chevron"
@@ -120,34 +130,31 @@ onUnmounted(() => document.removeEventListener("mousedown", onClickOutside));
     >
       <ul
         v-if="open"
-        class="absolute left-0 top-full z-50 mt-1 w-full rounded-xl border border-border bg-background py-1 overflow-hidden"
+        class="absolute left-0 top-full z-50 mt-1 w-full rounded-md border border-border bg-background py-1 overflow-hidden"
       >
-        <li
-          v-for="option in options"
-          :key="String(option[valueKey])"
-          class="flex items-center gap-2 text-text hover:bg-background cursor-pointer transition-colors duration-150"
-          :class="sizeClasses.item"
-          @click="select(option)"
-        >
-          <component
-            v-if="option.icon"
-            :is="option.icon"
-            :size="sizeClasses.icon"
-            class="text-text-muted shrink-0"
-          />
-
-          <span class="flex-1 truncate">
-            {{ option[labelKey] }}
-          </span>
-
-          <IconCheck
-            v-if="option[valueKey] === value"
-            :size="sizeClasses.icon"
-            class="text-text-muted shrink-0"
-          />
-        </li>
-
-        <li v-if="options.length === 0" class="px-3 py-2 text-sm text-text-muted">No options</li>
+        <slot name="menu" :close="() => (open = false)">
+          <li
+            v-for="option in options"
+            :key="String(option[valueKey])"
+            class="flex items-center gap-2 text-text hover:bg-background cursor-pointer transition-colors duration-150"
+            :class="sizeClasses.item"
+            @click="select(option)"
+          >
+            <component
+              v-if="option.icon"
+              :is="option.icon"
+              :size="sizeClasses.icon"
+              class="text-text-muted shrink-0"
+            />
+            <span class="flex-1 truncate">{{ option[labelKey] }}</span>
+            <IconCheck
+              v-if="option[valueKey] === value"
+              :size="sizeClasses.icon"
+              class="text-text-muted shrink-0"
+            />
+          </li>
+          <li v-if="options.length === 0" class="px-3 py-2 text-sm text-text-muted">No options</li>
+        </slot>
       </ul>
     </Transition>
   </div>

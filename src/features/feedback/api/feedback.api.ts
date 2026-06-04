@@ -1,5 +1,5 @@
 import api from "@/api";
-import type { Feedback, FeedbackParams } from "../types/feedback.types";
+import type { Feedback, FeedbackParams, FeedbackStats } from "../types/feedback.types";
 import type { PaginationMeta } from "@/types/pagination.types";
 
 interface FeedbackResponse {
@@ -15,6 +15,12 @@ interface FeedbackListResponse {
   pagination: PaginationMeta;
 }
 
+interface FeedbackStatsResponse {
+  success: boolean;
+  message: string;
+  data: FeedbackStats;
+}
+
 export const getFeedbacks = (params?: FeedbackParams) =>
   api.get<FeedbackListResponse>("/api/feedbacks", { params }).then((r) => r.data);
 
@@ -28,6 +34,9 @@ export const getFeedback = (id: string) =>
 
 export const deleteFeedback = (id: string) =>
   api.delete<{ success: boolean; message: string }>(`/api/feedbacks/${id}`).then((r) => r.data);
+
+export const getFeedbackStats = () =>
+  api.get<FeedbackStatsResponse>("/api/feedbacks/stats").then((r) => r.data.data);
 
 export const exportFeedbacks = (
   accessLink: string,

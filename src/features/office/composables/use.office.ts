@@ -19,9 +19,12 @@ export function useOffices() {
 }
 
 export function useOffice(accessLink: string) {
+  const officeStore = useOfficeStore();
+
   return useQuery({
     queryKey: OFFICE_KEYS.detail(accessLink),
     queryFn: () => getOffice(accessLink),
     staleTime: 1000 * 60 * 5,
+    placeholderData: () => officeStore.offices.find((o) => o.access_link === accessLink),
   });
 }

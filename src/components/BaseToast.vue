@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Toast from "primevue/toast";
-import ProgressBar from "primevue/progressbar";
+// import ProgressBar from "primevue/progressbar";
 import type { ToastMessageOptions } from "primevue/toast";
 import {
   IconCircleCheck,
@@ -8,8 +8,8 @@ import {
   IconAlertTriangle,
   IconCircleX,
   IconLoader2,
-  IconX,
-  IconPencilFilled,
+  // IconX,
+  // IconPencilFilled,
 } from "@tabler/icons-vue";
 import { type Component } from "vue";
 
@@ -67,12 +67,12 @@ const severityMap: Record<
 const getSeverity = (message: ToastMessageOptions) =>
   severityMap[(message.severity as Severity) ?? "info"];
 
-const props = defineProps<{ progress?: number }>();
+// const props = defineProps<{ progress?: number }>();
 </script>
 
 <template>
   <Toast
-    position="top-center"
+    position="top-right"
     :pt="{
       root: {
         class: 'fixed top-2 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-4 w-110 !top-2',
@@ -116,12 +116,12 @@ const props = defineProps<{ progress?: number }>();
 
   <Toast
     group="summarizing"
-    position="top-center"
+    position="top-right"
     :pt="{
       root: {
         class: 'fixed top-2 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-4 w-110 !top-2',
       },
-      message: { class: 'shadow-md overflow-hidden rounded-lg' },
+      message: { class: 'shadow-md overflow-hidden' },
       content: { class: 'flex items-start flex-1' },
       text: { class: 'hidden' },
       summary: { class: 'hidden' },
@@ -129,48 +129,14 @@ const props = defineProps<{ progress?: number }>();
       closeButton: { class: 'hidden' },
     }"
   >
-    <template #container="{ message, closeCallback }">
-      <div class="flex flex-col w-full bg-background-neutral overflow-hidden shadow-md">
-        <div class="flex items-start gap-3 px-4 pt-3 pb-3">
-          <IconPencilFilled class="w-5 h-5 shrink-0" />
-
-          <div class="flex flex-col gap-0.5 flex-1">
-            <span class="font-medium text-sm text-text">
-              {{ message.summary }}
-            </span>
-            <span class="text-xs text-text-muted leading-relaxed">
-              {{ message.detail }}
-            </span>
-          </div>
-
-          <button
-            class="text-gray-400 hover:text-gray-600 transition-colors mt-0.5"
-            @click="closeCallback"
-          >
-            <IconX class="w-4 h-4" />
-          </button>
-        </div>
-
-        <div class="px-4 py-2 bg-background-neutral flex flex-col gap-1.5">
-          <ProgressBar
-            :value="props.progress ?? 0"
-            :show-value="false"
-            class="rounded-full! h-1.5! bg-background!"
-            :pt="{
-              value: {
-                class: '!rounded-full !bg-primary transition-all duration-300',
-              },
-            }"
-          />
-
-          <span class="text-xs font-medium text-primary">
-            {{ Math.round(props.progress ?? 0) }}%
-          </span>
-        </div>
-
-        <div class="flex items-center justify-end gap-2 px-4 py-2.5 border-t border-gray-100">
-          <BaseButton variant="neutral" size="sm" label="Close" @click="closeCallback" />
-          <BaseButton> View </BaseButton>
+    <template #message="{ message }">
+      <div
+        class="relative flex items-start gap-3 px-4 py-3 w-full border-l-4 border-l-gray-400 bg-gray-50"
+      >
+        <IconLoader2 class="w-5 h-5 shrink-0 mt-0.5 text-text-muted animate-spin" />
+        <div class="flex flex-col gap-0.5 flex-1">
+          <span class="font-medium text-sm text-text-muted">{{ message.summary }}</span>
+          <span class="text-xs text-text-muted leading-relaxed">{{ message.detail }}</span>
         </div>
       </div>
     </template>
@@ -178,7 +144,7 @@ const props = defineProps<{ progress?: number }>();
 
   <Toast
     group="network-error"
-    position="top-center"
+    position="top-right"
     :pt="{
       root: {
         class: 'fixed top-2 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-4 w-110 !top-2',
@@ -198,7 +164,7 @@ const props = defineProps<{ progress?: number }>();
         <IconCircleX class="w-5 h-5 shrink-0 mt-0.5 text-danger" />
         <div class="flex flex-col gap-0.5 flex-1">
           <span class="font-medium text-sm text-danger">{{ message.summary }}</span>
-          <span class="text-xs text-text-muted leading-relaxed">{{ message.detail }}</span>
+          <span class="text-sm text-text-muted leading-relaxed">{{ message.detail }}</span>
         </div>
       </div>
     </template>

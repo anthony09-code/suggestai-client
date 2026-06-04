@@ -1,13 +1,34 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { useFeedbackStats } from "../../features/feedback/composables/use.stats.feedback";
 
-const isLoading = ref(true);
+const { stats, isLoading } = useFeedbackStats();
 
-onMounted(() => {
-  setTimeout(() => {
-    isLoading.value = false;
-  }, 1500);
-});
+const feedbackTrendLabels = computed(() =>
+  Array.isArray(stats.value?.feedback_trend) ? stats.value.feedback_trend.map((t) => t.month) : [],
+);
+const feedbackTrendData = computed(() =>
+  Array.isArray(stats.value?.feedback_trend) ? stats.value.feedback_trend.map((t) => t.count) : [],
+);
+
+const feedbacksPerOfficeLabels = computed(() =>
+  Array.isArray(stats.value?.feedbacks_per_office)
+    ? stats.value.feedbacks_per_office.map((o) => o.office_name)
+    : [],
+);
+const feedbacksPerOfficeData = computed(() =>
+  Array.isArray(stats.value?.feedbacks_per_office)
+    ? stats.value.feedbacks_per_office.map((o) => o.feedback_count)
+    : [],
+);
+
+// const isLoading = ref(true);
+
+// onMounted(() => {
+//   setTimeout(() => {
+//     isLoading.value = false;
+//   }, 1500);
+// });
 
 const wordCloudData = [
   { text: "Facility issues", weight: 10 },
@@ -47,9 +68,8 @@ const wordCloudData = [
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
       <BaseStatCard
         label="Total Feedbacks"
-        :value="1000"
-        subtitle="+12% this week"
-        highlight="true"
+        :value="stats?.total_feedbacks ?? 0"
+        subtitle="All across offices"
         :loading="isLoading"
       />
       <BaseStatCard
@@ -71,26 +91,9 @@ const wordCloudData = [
         height="280px"
       >
         <BaseBarChart
-          :labels="[
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-          ]"
-          :datasets="[
-            {
-              label: 'Feedback Submissions',
-              data: [120, 200, 150, 300, 250, 100, 100, 100, 200, 250, 300, 400],
-            },
-          ]"
+          :key="feedbackTrendData.join(',')"
+          :labels="feedbackTrendLabels"
+          :datasets="[{ label: 'Feedback Submissions', data: feedbackTrendData }]"
           height="280px"
         />
       </BaseChartCard>
@@ -115,8 +118,9 @@ const wordCloudData = [
       :loading="isLoading"
     >
       <BaseBarChart
-        :labels="['SASO', 'Registrar', 'Library', 'Finance', 'IT']"
-        :datasets="[{ label: 'Feedbacks', data: [120, 90, 60, 150, 80] }]"
+        :key="feedbacksPerOfficeData.join(',')"
+        :labels="feedbacksPerOfficeLabels"
+        :datasets="[{ label: 'Feedbacks', data: feedbacksPerOfficeData }]"
         horizontal
         height="280px"
       />

@@ -1,13 +1,18 @@
 <script lang="ts" setup>
-import { computed } from "vue";
-import { useRouter } from "vue-router";
+import { ref, computed } from "vue";
 import { useOffices } from "@/features/office/composables/use.office";
+import { useBaseRouter } from "@/composables/use.router";
+import CreateOfficeDialog from "@/features/office/components/CreateOfficeDialog.vue";
 
-const { data: offices, isLoading, isError } = useOffices();
-
+const { data: offices, isLoading, isError, refetch } = useOffices();
 const officeCount = computed(() => offices.value?.length || 5);
+const { router } = useBaseRouter();
 
-const router = useRouter();
+const showCreateDialog = ref(false);
+
+function onOfficeCreated() {
+  refetch();
+}
 </script>
 
 <template>
@@ -18,9 +23,10 @@ const router = useRouter();
         label="Create Box"
         variant="primary"
         size="small"
-        @click="router.push({ name: 'create-office' })"
+        @click="showCreateDialog = true"
       />
     </div>
+
     <span class="text-base text-text-muted">Suggestion Box:</span>
 
     <BaseMessage
@@ -47,7 +53,6 @@ const router = useRouter();
           </div>
         </BaseCard>
       </template>
-
       <template v-else>
         <BaseCard
           v-for="office in offices"
@@ -71,5 +76,8 @@ const router = useRouter();
         </BaseCard>
       </template>
     </div>
+
+    <!-- Create Office Dialog -->
+    <CreateOfficeDialog v-model:visible="showCreateDialog" @created="onOfficeCreated" />
   </main>
 </template>

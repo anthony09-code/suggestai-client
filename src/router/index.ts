@@ -73,8 +73,8 @@ const router = createRouter({
               },
             },
             {
-              path: "summary",
-              name: "office-summary",
+              path: "sessions",
+              name: "office-sessions",
               component: () => import("../views/offices/OfficeSuggestionSummaryView.vue"),
               meta: {
                 title: "Summary",

@@ -18,3 +18,9 @@ export interface AuthResponse {
   expires_in: string;
   user: User;
 }
+
+export interface LoginErrorResponse {
+  success: false;
+  message: string;
+  lockout_seconds?: number;
+}

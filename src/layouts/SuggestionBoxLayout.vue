@@ -1,23 +1,22 @@
 <script setup lang="ts">
 import { IconSettings, IconTable, IconBox } from "@tabler/icons-vue";
-import { useRoute, useRouter } from "vue-router";
 import { computed } from "vue";
+import { useBaseRouter } from "@/composables/use.router";
 import { useOffices } from "@/features/office/composables/use.office";
 
-const route = useRoute();
-const router = useRouter();
+const { params, path, push } = useBaseRouter();
 const { data: offices } = useOffices();
 
-const link = computed(() => route.params.accessLink as string);
+const link = computed(() => params.value.accessLink as string);
 
 const currentOffice = computed(() => offices.value?.find((o) => o.access_link === link.value));
 
 const tabs = computed(() => {
   const base = `/offices/${link.value}`;
   return [
-    { label: "Overview", to: `${base}/overview` },
+    // { label: "Overview", to: `${base}/overview` },
     { label: "Feedbacks", to: `${base}/feedbacks` },
-    { label: "Summary", to: `${base}/summary` },
+    { label: "Sessions", to: `${base}/sessions` },
   ];
 });
 
@@ -26,7 +25,7 @@ const selectedOffice = computed({
     return currentOffice.value?.office_name ?? link.value;
   },
   set(val: string | null) {
-    if (val) router.push(`/offices/${val}/overview`);
+    if (val) push(`/offices/${val}/overview`);
   },
 });
 
@@ -40,11 +39,13 @@ const officeOptions = computed(
 
 const breadcrumbItems = computed(() => {
   const base = `/offices/${link.value}`;
-  const currentTab = tabs.value.find((t) => route.path === t.to);
+  const isSettings = path.value === `${base}/settings`;
+  const currentTab = tabs.value.find((t) => path.value === t.to);
+
   return [
     { label: "Offices", to: "/offices" },
     { label: currentOffice.value?.office_name ?? link.value, to: base },
-    { label: currentTab?.label ?? "Overview" },
+    { label: isSettings ? "Settings" : (currentTab?.label ?? "Overview") },
   ];
 });
 </script>
@@ -66,8 +67,10 @@ const breadcrumbItems = computed(() => {
       </div>
       <nav class="flex flex-col px-4">
         <router-link
-          to="settings"
+          :to="`/offices/${link}/settings`"
           class="flex items-center gap-2 rounded-lg my-4 px-2 py-1 hover:bg-muted"
+          active-class="bg-text-muted/10"
+          exact-active-class="bg-text-muted/10"
         >
           <IconSettings :size="14" />
           <span class="text-sm text-text">Settings</span>
@@ -99,7 +102,7 @@ const breadcrumbItems = computed(() => {
         </div>
         <span class="text-sm text-text-muted">Last Activity: 2hours ago</span>
       </div>
-      <main class="p-12">
+      <main class="px-12 py-6">
         <RouterView />
       </main>
     </div>

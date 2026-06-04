@@ -23,7 +23,7 @@ export function useFeedbackTable() {
     },
     {
       key: "raw_text",
-      label: "Text",
+      label: "Feedback",
       slot: "raw_text",
     },
     {
@@ -39,6 +39,8 @@ export function useFeedbackTable() {
           year: "numeric",
           month: "short",
           day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
         }),
     },
   ]);

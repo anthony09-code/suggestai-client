@@ -52,7 +52,7 @@ const emit = defineEmits<{
         @click="emit('close')"
         class="shrink-0 text-current opacity-60 hover:opacity-100 transition"
       >
-        <IconX :size="18" />
+        <IconX :size="18" :stroke="2" />
       </button>
     </div>
   </Message>
