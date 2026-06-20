@@ -19,6 +19,8 @@ export const getSessionsByOffice = (accessLink: string, page = 1, perPage = 15, 
     })
     .then((r) => r.data);
 
+export const getSessionStats = () => api.get("/api/sessions/stats").then((r) => r.data.data);
+
 export const downloadSessionReport = (sessionId: string) =>
   api
     .get(`/api/sessions/${sessionId}/report/download`, {

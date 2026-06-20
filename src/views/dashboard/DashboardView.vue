@@ -1,28 +1,40 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useFeedbackStats } from "../../features/feedback/composables/use.stats.feedback";
+import { useSessionStats } from "../../features/analysis/composables/use.session-stats";
+import { useOffices } from "@/features/office/composables/use.office";
 
-const { stats, isLoading } = useFeedbackStats();
+const { stats: feedbackStats, isLoading: feedbackIsLoading } = useFeedbackStats();
+const { stats: sessionStats, isLoading: sessionIsLoading } = useSessionStats();
+const { data: offices, isLoading: officesIsLoading } = useOffices();
 
 const feedbackTrendLabels = computed(() =>
-  Array.isArray(stats.value?.feedback_trend) ? stats.value.feedback_trend.map((t) => t.month) : [],
+  Array.isArray(feedbackStats.value?.feedback_trend)
+    ? feedbackStats.value.feedback_trend.map((t) => t.month)
+    : [],
 );
+
 const feedbackTrendData = computed(() =>
-  Array.isArray(stats.value?.feedback_trend) ? stats.value.feedback_trend.map((t) => t.count) : [],
+  Array.isArray(feedbackStats.value?.feedback_trend)
+    ? feedbackStats.value.feedback_trend.map((t) => t.count)
+    : [],
 );
 
 const feedbacksPerOfficeLabels = computed(() =>
-  Array.isArray(stats.value?.feedbacks_per_office)
-    ? stats.value.feedbacks_per_office.map((o) => o.office_name)
-    : [],
-);
-const feedbacksPerOfficeData = computed(() =>
-  Array.isArray(stats.value?.feedbacks_per_office)
-    ? stats.value.feedbacks_per_office.map((o) => o.feedback_count)
+  Array.isArray(feedbackStats.value?.feedbacks_per_office)
+    ? feedbackStats.value.feedbacks_per_office.map((o) => o.office_name)
     : [],
 );
 
-// const isLoading = ref(true);
+const feedbacksPerOfficeData = computed(() =>
+  Array.isArray(feedbackStats.value?.feedbacks_per_office)
+    ? feedbackStats.value.feedbacks_per_office.map((o) => o.feedback_count)
+    : [],
+);
+
+const isLoading = computed(
+  () => feedbackIsLoading.value || sessionIsLoading.value || officesIsLoading.value,
+);
 
 // onMounted(() => {
 //   setTimeout(() => {
@@ -68,18 +80,28 @@ const wordCloudData = [
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
       <BaseStatCard
         label="Total Feedbacks"
-        :value="stats?.total_feedbacks ?? 0"
+        :value="feedbackStats?.total_feedbacks ?? 0"
         subtitle="All across offices"
         :loading="isLoading"
       />
       <BaseStatCard
         label="Topics found"
-        :value="36"
+        :value="sessionStats?.total_topics ?? 0"
         subtitle="Across all offices"
         :loading="isLoading"
       />
-      <BaseStatCard label="Offices" :value="8" subtitle="All Active" :loading="isLoading" />
-      <BaseStatCard label="Sessions run" :value="18" subtitle="This month" :loading="isLoading" />
+      <BaseStatCard
+        label="Offices"
+        :value="offices?.length ?? 0"
+        subtitle="All Active"
+        :loading="isLoading"
+      />
+      <BaseStatCard
+        label="Sessions run"
+        :value="sessionStats?.total_sessions ?? 0"
+        subtitle="All time"
+        :loading="isLoading"
+      />
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
@@ -106,7 +128,14 @@ const wordCloudData = [
       >
         <BaseDonutChart
           :labels="['Processed', 'Pending']"
-          :datasets="[{ data: [60, 25] }]"
+          :datasets="[
+            {
+              data: [
+                feedbackStats?.status_breakdown?.processed ?? 0,
+                feedbackStats?.status_breakdown?.pending ?? 0,
+              ],
+            },
+          ]"
           height="280px"
         />
       </BaseChartCard>
@@ -135,7 +164,14 @@ const wordCloudData = [
       >
         <BaseDonutChart
           :labels="['Anonymous', 'Identified']"
-          :datasets="[{ data: [60, 25] }]"
+          :datasets="[
+            {
+              data: [
+                feedbackStats?.anonymous_breakdown?.anonymous ?? 0,
+                feedbackStats?.anonymous_breakdown?.identified ?? 0,
+              ],
+            },
+          ]"
           height="280px"
         />
       </BaseChartCard>
@@ -148,8 +184,13 @@ const wordCloudData = [
         height="280px"
       >
         <BaseBarChart
-          :labels="['Saso Office', 'Feb', 'Mar', 'Apr', 'May']"
-          :datasets="[{ label: 'Topics by Office', data: [1, 5, 10, 15, 20] }]"
+          :labels="sessionStats?.topics_per_office?.map((o) => o.office_name) ?? []"
+          :datasets="[
+            {
+              label: 'Topics by Office',
+              data: sessionStats?.topics_per_office?.map((o) => o.topic_count) ?? [],
+            },
+          ]"
           horizontal
           height="280px"
         />
@@ -190,7 +231,7 @@ const wordCloudData = [
       :loading="isLoading"
       height="320px"
     >
-      <BaseWordCloud :words="wordCloudData" />
+      <BaseWordCloud :words="sessionStats?.top_topics ?? []" />
     </BaseChartCard>
   </main>
 </template>

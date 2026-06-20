@@ -85,7 +85,7 @@ function onHide() {
       <!-- Office Name -->
       <div class="space-y-1.5">
         <label class="text-xs font-medium text-text flex items-center gap-1.5">
-          <IconBuilding :size="13" :stroke="2" class="text-text-muted" />
+          <IconBuilding size="13" stroke="2" class="text-text-muted" />
           Office / Department Name
           <span class="text-red-500">*</span>
         </label>
@@ -127,7 +127,7 @@ function onHide() {
         class="flex items-center justify-between rounded-lg border border-border px-3 py-2.5 bg-background-neutral/50"
       >
         <div class="flex items-center gap-2">
-          <IconToggleLeft :size="15" :stroke="2" class="text-text-muted" />
+          <IconToggleLeft size="15" stroke="2" class="text-text-muted" />
           <span class="text-sm text-text">Active</span>
         </div>
 

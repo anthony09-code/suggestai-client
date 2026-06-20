@@ -58,7 +58,7 @@ function onOfficeCreated() {
           v-for="office in offices"
           :key="office.id"
           class="cursor-pointer"
-          @click="router.push(`/offices/${office.access_link}/overview`)"
+          @click="router.push(`/offices/${office.access_link}/feedbacks`)"
         >
           <p class="text-base font-medium text-text">{{ office.office_name }}</p>
           <div class="mt-3 flex items-center justify-between text-sm">

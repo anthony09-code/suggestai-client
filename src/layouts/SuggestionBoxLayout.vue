@@ -25,7 +25,7 @@ const selectedOffice = computed({
     return currentOffice.value?.office_name ?? link.value;
   },
   set(val: string | null) {
-    if (val) push(`/offices/${val}/overview`);
+    if (val) push(`/offices/${val}/feedbacks`);
   },
 });
 
@@ -103,7 +103,7 @@ const breadcrumbItems = computed(() => {
         <span class="text-sm text-text-muted">Last Activity: 2hours ago</span>
       </div>
       <main class="px-12 py-6">
-        <RouterView />
+        <RouterView :key="link" />
       </main>
     </div>
   </div>

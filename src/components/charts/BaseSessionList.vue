@@ -1,3 +1,9 @@
+<script setup lang="ts">
+defineProps<{
+  title?: string;
+  subtitle?: string;
+}>();
+</script>
 <template>
   <div class="flex items-center justify-between mb-4">
     <div>
