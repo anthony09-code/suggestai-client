@@ -54,16 +54,8 @@ const router = createRouter({
         {
           path: "offices/:accessLink",
           component: SuggestionBoxLayout,
-          redirect: (to) => `/offices/${to.params.accessLink}/overview`,
+          redirect: (to) => `/offices/${to.params.accessLink}/feedbacks`,
           children: [
-            {
-              path: "overview",
-              name: "office-overview",
-              component: () => import("../views/offices/OfficeOverviewView.vue"),
-              meta: {
-                title: "Overview",
-              },
-            },
             {
               path: "feedbacks",
               name: "office-feedbacks",

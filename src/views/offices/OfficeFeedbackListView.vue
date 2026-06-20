@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from "vue";
+import { ref, computed, watch, nextTick, onUnmounted } from "vue";
 import { IconSpy, IconUser, IconFilter, IconCalendar, IconDownload } from "@tabler/icons-vue";
 import {
   dateOptions,
@@ -22,14 +22,18 @@ import { useExportFeedbacks } from "@/features/feedback/composables/use.export.f
 import { getToast } from "@/lib/toast";
 
 const { params } = useBaseRouter();
-const accessLink = params.value.accessLink as string;
+const accessLink = computed(() => params.value.accessLink as string);
+const analysisStore = useAnalysisStore();
+
+watch(accessLink, () => {
+  analysisStore.clearCompletedSession();
+});
+
 const toast = getToast();
 
-// ── dialogs ───────────────────────────────────────────────────────────────────
 const summarizeVisible = ref(false);
 const topicsVisible = ref(false);
 
-// ── filters ───────────────────────────────────────────────────────────────────
 const dateFilter = ref<DateFilter>("all");
 const statusFilter = ref<StatusFilter>("all");
 const anonymousFilter = ref<AnonymousFilter>("all");
@@ -61,14 +65,11 @@ watch([dateFilter, statusFilter, anonymousFilter], () => {
   currentPage.value = 1;
 });
 
-// ── data ──────────────────────────────────────────────────────────────────────
-const { data, isFetching, isError } = useFeedbacksByOffice(accessLink, queryParams);
+const { data, isFetching, isError } = useFeedbacksByOffice(accessLink.value, queryParams);
 const { failedImages, expandedRows, onImageError, toggleRow, columns } = useFeedbackTable();
-const { exportFile, isExporting } = useExportFeedbacks(accessLink);
-const { analyze, isAnalyzing } = useAnalyzeFeedbacks(accessLink);
-const analysisStore = useAnalysisStore();
+const { exportFile, isExporting } = useExportFeedbacks(accessLink.value);
+const { analyze, isAnalyzing } = useAnalyzeFeedbacks(accessLink.value);
 
-// ── export ────────────────────────────────────────────────────────────────────
 watch(exportFilter, (format) => {
   if (format !== "all") {
     exportFile(format, {
@@ -82,8 +83,15 @@ watch(exportFilter, (format) => {
   }
 });
 
-// ── analyze ───────────────────────────────────────────────────────────────────
 function handleAnalyze() {
+  toast.add({
+    severity: "secondary",
+    summary: "Analysis queued",
+    detail: "Summarizing feedbacks, this may take a moment…",
+    group: "summarizing",
+    life: 0,
+  });
+
   analyze(
     {
       date: dateFilter.value,
@@ -92,6 +100,7 @@ function handleAnalyze() {
     },
     {
       onError: (message) => {
+        toast.removeGroup("summarizing");
         toast.add({
           severity: "error",
           summary: "Failed to queue analysis",
@@ -100,6 +109,7 @@ function handleAnalyze() {
         });
       },
       onFailed: () => {
+        toast.removeGroup("summarizing");
         toast.add({
           severity: "error",
           summary: "Analysis failed",
@@ -108,6 +118,7 @@ function handleAnalyze() {
         });
       },
       onSessionError: () => {
+        toast.removeGroup("summarizing");
         toast.add({
           severity: "error",
           summary: "Analysis failed",
@@ -118,6 +129,9 @@ function handleAnalyze() {
     },
   );
 }
+onUnmounted(() => {
+  analysisStore.clearCompletedSession();
+});
 </script>
 
 <template>
@@ -127,13 +141,13 @@ function handleAnalyze() {
     <BaseMessage
       v-else-if="analysisStore.completedSession && !analysisStore.isSessionSaved"
       severity="success"
-      :title="`Summarize complete — ${analysisStore.completedSession.topic_count} topic${analysisStore.completedSession.topic_count !== 1 ? 's' : ''} identified.`"
       closable
       @close="analysisStore.clearCompletedSession()"
       class="mb-4"
+      :title="`Summarize complete — ${analysisStore.completedSession.topic_count} topic${analysisStore.completedSession.topic_count !== 1 ? 's' : ''} identified.`"
     >
       <button
-        class="text-sm font-medium underline underline-offset-2 mt-1 cursor-pointer"
+        class="self-start text-sm font-medium underline underline-offset-2 mt-1 cursor-pointer text-primary"
         @click="topicsVisible = true"
       >
         View topics
@@ -180,7 +194,6 @@ function handleAnalyze() {
         <BaseButton
           variant="primary"
           label="Summarize"
-          :loading="isAnalyzing"
           :disabled="isAnalyzing || !data?.pagination?.total"
           @click="!isAnalyzing && (summarizeVisible = true)"
         />

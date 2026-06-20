@@ -120,7 +120,7 @@ function onShow() {
             aria-label="Close"
             @click="closeCallback"
           >
-            <IconX :size="18" :stroke="2" />
+            <IconX size="18" stroke="2" />
           </button>
         </div>
 
