@@ -28,8 +28,6 @@ const columns = [
   { label: "Topics", slot: "topic_count", width: "100px" },
   { label: "Date From", slot: "date_from" },
   { label: "Date To", slot: "date_to" },
-  { label: "Started", slot: "started_at" },
-  { label: "Completed", slot: "completed_at" },
   { label: "", slot: "actions", width: "100px" },
 ];
 
@@ -44,6 +42,12 @@ const viewVisible = computed({
 
 const sessionId = computed(() => sessionToView.value?.id ?? null);
 const { data: sessionDetail, isPending: isLoadingDetail } = useSession(sessionId);
+
+const sortedTopics = computed(() =>
+  [...(sessionDetail.value?.data?.topics ?? [])].sort(
+    (a, b) => b.feedback_count - a.feedback_count,
+  ),
+);
 
 const deleteVisible = computed({
   get: () => !!sessionToDelete.value,
@@ -210,12 +214,15 @@ function confirmDelete() {
     <!-- topics list -->
     <div v-else class="flex flex-col gap-3 overflow-y-auto max-h-[60vh] pr-1">
       <div
-        v-for="topic in sessionDetail?.data?.topics ?? []"
+        v-for="topic in sortedTopics"
         :key="topic.id"
         class="flex items-start justify-between gap-4 p-3 rounded-lg bg-background-neutral"
       >
         <div class="flex flex-col gap-1 min-w-0">
           <span class="text-sm font-medium text-text">{{ topic.label }}</span>
+          <p v-if="topic.description" class="text-xs text-text-muted leading-5">
+            {{ topic.description }}
+          </p>
           <div class="flex flex-wrap gap-1 mt-1">
             <span
               v-for="keyword in topic.keywords"

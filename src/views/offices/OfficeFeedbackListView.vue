@@ -35,14 +35,22 @@ const summarizeVisible = ref(false);
 const topicsVisible = ref(false);
 
 const dateFilter = ref<DateFilter>("all");
+const customDateFrom = ref<string | null>(null);
+const customDateTo = ref<string | null>(null);
 const statusFilter = ref<StatusFilter>("all");
 const anonymousFilter = ref<AnonymousFilter>("all");
 const exportFilter = ref<ExportFormat | "all">("all");
 const currentPage = ref(1);
 const pageSize = ref(15);
 
+const isCustomDateValid = computed(
+  () => dateFilter.value !== "custom" || (!!customDateFrom.value && !!customDateTo.value),
+);
+
 const queryParams = computed(() => ({
   date: dateFilter.value,
+  date_from: dateFilter.value === "custom" ? customDateFrom.value : null,
+  date_to: dateFilter.value === "custom" ? customDateTo.value : null,
   status: statusFilter.value,
   anonymous: anonymousFilter.value,
   export: exportFilter.value,
@@ -50,20 +58,42 @@ const queryParams = computed(() => ({
   per_page: pageSize.value,
 }));
 
+
 const hasActiveFilters = computed(
   () =>
     dateFilter.value !== "all" || statusFilter.value !== "all" || anonymousFilter.value !== "all",
 );
 
+const sortedTopics = computed(() =>
+  [...(analysisStore.completedSession?.topics ?? [])].sort(
+    (a, b) => b.feedback_count - a.feedback_count,
+  ),
+);
+
 function clearFilters() {
   dateFilter.value = "all";
+  customDateFrom.value = null;
+  customDateTo.value = null;
   statusFilter.value = "all";
   anonymousFilter.value = "all";
 }
 
-watch([dateFilter, statusFilter, anonymousFilter], () => {
+watch(dateFilter, (value) => {
+  currentPage.value = 1;
+  if (value !== "custom") {
+    customDateFrom.value = null;
+    customDateTo.value = null;
+  }
+});
+
+watch([customDateFrom, customDateTo], () => {
   currentPage.value = 1;
 });
+
+watch([statusFilter, anonymousFilter], () => {
+  currentPage.value = 1;
+});
+
 
 const { data, isFetching, isError } = useFeedbacksByOffice(accessLink.value, queryParams);
 const { failedImages, expandedRows, onImageError, toggleRow, columns } = useFeedbackTable();
@@ -74,6 +104,8 @@ watch(exportFilter, (format) => {
   if (format !== "all") {
     exportFile(format, {
       date: dateFilter.value,
+      date_from: dateFilter.value === "custom" ? customDateFrom.value : null,
+      date_to: dateFilter.value === "custom" ? customDateTo.value : null,
       status: statusFilter.value,
       anonymous: anonymousFilter.value,
     });
@@ -95,6 +127,8 @@ function handleAnalyze() {
   analyze(
     {
       date: dateFilter.value,
+      date_from: dateFilter.value === "custom" ? customDateFrom.value : null,
+      date_to: dateFilter.value === "custom" ? customDateTo.value : null,
       status: statusFilter.value,
       anonymous: anonymousFilter.value,
     },
@@ -165,6 +199,23 @@ onUnmounted(() => {
           size="large"
           class="w-44"
         />
+
+        <template v-if="dateFilter === 'custom'">
+          <input
+            type="date"
+            v-model="customDateFrom"
+            :max="customDateTo ?? undefined"
+            class="h-10 px-3 text-sm text-text bg-background rounded-md border border-border focus:border-text-muted outline-none"
+          />
+          <span class="text-sm text-text-muted">to</span>
+          <input
+            type="date"
+            v-model="customDateTo"
+            :min="customDateFrom ?? undefined"
+            class="h-10 px-3 text-sm text-text bg-background rounded-md border border-border focus:border-text-muted outline-none"
+          />
+        </template>
+
         <BaseDropdown
           v-model="statusFilter"
           :options="statusOptions"
@@ -310,12 +361,15 @@ onUnmounted(() => {
   >
     <div class="flex flex-col gap-3 overflow-y-auto max-h-[60vh]">
       <div
-        v-for="topic in analysisStore.completedSession?.topics ?? []"
+        v-for="topic in sortedTopics"
         :key="topic.id"
         class="flex items-start justify-between gap-4 p-3 rounded-lg bg-background-neutral"
       >
         <div class="flex flex-col gap-1 min-w-0">
           <span class="text-sm font-medium text-text">{{ topic.label }}</span>
+          <p v-if="topic.description" class="text-xs text-text-muted leading-5">
+            {{ topic.description }}
+          </p>
           <div class="flex flex-wrap gap-1 mt-1">
             <span
               v-for="keyword in topic.keywords"
@@ -334,16 +388,6 @@ onUnmounted(() => {
 
     <template #footer="{ close }">
       <BaseButton variant="neutral" label="Close" @click="close" />
-      <!-- <BaseButton
-        variant="primary"
-        label="Save"
-        @click="
-          () => {
-            analysisStore.saveSession();
-            close();
-          }
-        "
-      /> -->
     </template>
   </BaseDialog>
 </template>

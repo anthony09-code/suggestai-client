@@ -1,16 +1,11 @@
 <script setup lang="ts">
-import {
-  IconDashboardFilled,
-  IconLayoutDashboardFilled,
-  IconReportAnalyticsFilled,
-  IconBox,
-} from "@tabler/icons-vue";
+import { IconDashboardFilled, IconLayoutDashboardFilled, IconBox } from "@tabler/icons-vue";
 import { ref, computed } from "vue";
 import { useBaseRouter } from "@/composables/use.router";
 import { useUserInitials } from "@/composables/use.user.initials";
 import { useLogout } from "@/features/auth/composables/use.logout";
 import { useOffices } from "@/features/office/composables/use.office";
-import type { MenuItem } from "@/components/BaseMenu";
+import BaseMenu, { type MenuItem } from "@/components/BaseMenu.vue";
 
 const { path, push } = useBaseRouter();
 
@@ -89,7 +84,7 @@ const menuItems = computed<MenuItem[]>(() => [
           size="md"
           bg="bg-primary"
           class="cursor-pointer"
-          @click="(e) => avatarMenu?.toggle(e)"
+          @click="(e: MouseEvent) => avatarMenu?.toggle(e)"
         />
       </div>
     </aside>

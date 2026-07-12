@@ -1,3 +1,9 @@
+import type { DirectiveBinding, Directive } from "vue";
+
+type TooltipValue = string | { value: string; showDelay?: number };
+
+type TooltipBinding = DirectiveBinding<TooltipValue>;
+
 interface TooltipEl extends HTMLElement {
   _tooltip: {
     tip: HTMLDivElement;
@@ -6,17 +12,12 @@ interface TooltipEl extends HTMLElement {
   };
 }
 
-interface TooltipBinding {
-  modifiers: Record<string, boolean>;
-  value: string | { value: string };
-}
-
 const getValue = (binding: TooltipBinding) =>
   typeof binding.value === "object" ? binding.value.value : binding.value;
 
-const tooltip = {
+const tooltip: Directive<TooltipEl, TooltipValue> = {
   mounted(el: TooltipEl, binding: TooltipBinding) {
-    const position = Object.keys(binding.modifiers)[0] || "right";
+    const position = Object.keys(binding.modifiers).find((k) => binding.modifiers[k]) ?? "right";
     const tip = Object.assign(document.createElement("div"), {
       textContent: getValue(binding),
     });
