@@ -65,7 +65,7 @@ const severityMap = {
       class="shrink-0 opacity-60 hover:opacity-100 transition mt-0.5"
       :class="severity ? severityMap[severity].textColor : 'text-text'"
     >
-      <IconX :size="18" :stroke="2" />
+      <IconX :size="18" stroke="2" />
     </button>
   </div>
 </template>

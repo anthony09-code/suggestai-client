@@ -35,6 +35,11 @@ export const dateOptions = [
     label: "Year to Date",
     value: "ytd",
   },
+  {
+    label: "Custom Range",
+    value: "custom"
+  }
+
 ] as const;
 
 export const anonymousOptions = [

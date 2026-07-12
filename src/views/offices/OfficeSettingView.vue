@@ -7,7 +7,6 @@ import { useOfficeForm } from "@/composables/use.office-form";
 import { useUpdateOffice } from "@/features/office/composables/use.update.office";
 import { useDeleteOffice } from "@/features/office/composables/use.delete.office";
 import { useCopyClipboard } from "@/composables/use.copy-clipboard";
-import { useImageUpload } from "@/composables/use.image-upload";
 import { downloadOfficeQr } from "@/features/office/api/office.api";
 import DeleteOfficeDialog from "@/features/office/components/DeleteOfficeDialog.vue";
 import { OFFICE_COLORS, COLOR_OPTIONS } from "@/constants/office.constants";
@@ -17,7 +16,7 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 const { params, push } = useBaseRouter();
 const accessLink = computed(() => params.value.accessLink as string);
 
-const { data: office, isPending: isOfficeLoading, isFetching } = useOffice(accessLink.value);
+const { data: office, isPending: isOfficeLoading } = useOffice(accessLink.value);
 
 const feedbackLink = computed(() =>
   office.value ? `${BASE_URL}/student/feedback/${office.value.access_link}` : "",
@@ -78,17 +77,6 @@ async function downloadQrCode() {
   }
 }
 
-const {
-  inputRef,
-  previewUrl,
-  isDragging,
-  error,
-  selectedFile,
-  triggerInput,
-  onFileChange,
-  onDrop,
-  clearImage,
-} = useImageUpload();
 
 const { officeName, description, isActive, selectedColor } = useOfficeForm(office);
 
@@ -100,8 +88,6 @@ watch(
   },
   { immediate: true },
 );
-
-defineExpose({ selectedFile });
 </script>
 
 <template>
@@ -118,7 +104,7 @@ defineExpose({ selectedFile });
           <div class="flex gap-1">
             <BaseInput :model-value="feedbackLink" readonly class="flex-1" />
             <BaseButton variant="neutral" @click="copyToClipboard(feedbackLink ?? '')">
-              <IconCopy :size="18" :stroke="2" />
+              <IconCopy :size="18" stroke="2" />
             </BaseButton>
           </div>
         </div>

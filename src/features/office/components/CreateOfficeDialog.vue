@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive } from "vue";
 import { IconBuilding, IconToggleLeft } from "@tabler/icons-vue";
 import { useCreateOffice } from "@/features/office/composables/use.create.office";
 
@@ -152,7 +152,7 @@ function onHide() {
         label="Cancel"
         variant="secondary"
         size="small"
-        :disabled="isSubmitting"
+        :disabled="isPending"
         @click="close"
       />
       <BaseButton

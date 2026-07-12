@@ -21,6 +21,7 @@ export interface Topic {
   id: string;
   label: string;
   keywords: string[];
+  description: string | null
   feedback_count: number;
   cluster_x: number;
   cluster_y: number;
@@ -35,6 +36,13 @@ export interface SessionDetailResponse {
   success: boolean;
   message: string;
   data: SessionDetail;
+}
+
+export interface SessionStats {
+  total_sessions: number;
+  total_topics: number;
+  topics_per_office: { office_name: string; topic_count: number }[];
+  top_topics: { text: string; weight: number }[];
 }
 
 export interface AnalysisSession {

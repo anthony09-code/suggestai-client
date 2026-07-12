@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { computed } from "vue";
 import { useFeedbackStats } from "../../features/feedback/composables/use.stats.feedback";
 import { useSessionStats } from "../../features/analysis/composables/use.session-stats";
 import { useOffices } from "@/features/office/composables/use.office";
@@ -35,36 +35,6 @@ const feedbacksPerOfficeData = computed(() =>
 const isLoading = computed(
   () => feedbackIsLoading.value || sessionIsLoading.value || officesIsLoading.value,
 );
-
-// onMounted(() => {
-//   setTimeout(() => {
-//     isLoading.value = false;
-//   }, 1500);
-// });
-
-const wordCloudData = [
-  { text: "Facility issues", weight: 10 },
-  { text: "Staff concerns", weight: 8 },
-  { text: "Process delays", weight: 6 },
-  { text: "Wifi & internet", weight: 7 },
-  { text: "Food & canteen", weight: 5 },
-  { text: "Library resources", weight: 4 },
-  { text: "Classroom comfort", weight: 9 },
-  { text: "Tuition fees", weight: 7 },
-  { text: "Scholarship concerns", weight: 6 },
-  { text: "Enrollment process", weight: 8 },
-  { text: "Document processing", weight: 7 },
-  { text: "Guidance counseling", weight: 4 },
-  { text: "Health services", weight: 5 },
-  { text: "Restroom cleanliness", weight: 6 },
-  { text: "Parking issues", weight: 3 },
-  { text: "Laboratory equipment", weight: 5 },
-  { text: "Teaching quality", weight: 8 },
-  { text: "Grade concerns", weight: 7 },
-  { text: "Extracurricular", weight: 3 },
-  { text: "Campus safety", weight: 6 },
-  { text: "Noise level", weight: 4 },
-];
 </script>
 
 <template>
@@ -197,33 +167,6 @@ const wordCloudData = [
       </BaseChartCard>
     </div>
 
-    <BaseChartCard
-      title="Recent Analysis Sessions"
-      subtitle="Latest processed feedback analysis"
-      :loading="isLoading"
-    >
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="text-left text-text-muted border-b border-border">
-              <th class="py-2">Office</th>
-              <th class="py-2">Feedbacks</th>
-              <th class="py-2">Status</th>
-              <th class="py-2">Date</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr class="border-b border-border" v-for="i in 4" :key="i">
-              <td class="py-2">Office {{ i }}</td>
-              <td class="py-2">{{ i * 40 }}</td>
-              <td class="py-2 text-primary">Completed</td>
-              <td class="py-2 text-text-muted">2 hours ago</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </BaseChartCard>
 
     <BaseChartCard
       title="Top topics across all offices"

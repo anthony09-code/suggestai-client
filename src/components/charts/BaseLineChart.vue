@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import type { CoreScaleOptions } from "chart.js";
+import type { LinearScaleOptions } from "chart.js";
 
 type Dataset = {
   label: string;
@@ -33,23 +33,17 @@ const chartData = computed(() => ({
 }));
 
 const chartOptions = computed(() => {
-  const axesConfig: Record<string, CoreScaleOptions> = {};
+  const axesConfig: Record<string, LinearScaleOptions> = {};
 
   (props.axes ?? []).forEach((axis) => {
     axesConfig[axis.id] = {
-      type: "linear",
       display: true,
       position: axis.position,
       grid: {
         drawOnChartArea: axis.grid ?? axis.position === "left",
       },
-      title: axis.label
-        ? {
-            display: true,
-            text: axis.label,
-          }
-        : undefined,
-    };
+      title: axis.label ? { title: { display: true, text: axis.label } } : {},
+    } as LinearScaleOptions;
   });
 
   return {
